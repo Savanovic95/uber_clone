@@ -2,9 +2,11 @@
 
 namespace App\Notifications;
 
+use App\Http\Controllers\SmsController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
 use NotificationChannels\Twilio\TwilioChannel;
 use NotificationChannels\Twilio\TwilioSmsMessage;
@@ -12,29 +14,17 @@ use NotificationChannels\Twilio\TwilioSmsMessage;
 class LoginNeedsVerification extends Notification
 {
     use Queueable;
-
-    /**
-     * Create a new notification instance.
-     */
     public function __construct()
     {
         //
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function via($notifiable): array
     {
-        return [TwilioChannel::class];
+        return ['vonage'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    public function toTwilio(object $notifiable)
+    public function toVonage($notifiable): VonageMessage
     {
         $loginCode = rand(111111, 999999,);
 
@@ -42,19 +32,16 @@ class LoginNeedsVerification extends Notification
             'login_code' => $loginCode
         ]);
 
-        return (new TwilioSmsMessage())
-            ->content("Your Uber login code is {$loginCode}, don't share it with anyone!");
+
+        return (new VonageMessage())
+            ->content("Your verification code is {$loginCode}");
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
+    public function toArray($notifiable): array
     {
         return [
             //
         ];
     }
+
 }
