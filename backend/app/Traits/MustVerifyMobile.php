@@ -14,9 +14,8 @@ trait MustVerifyMobile
     public function markMobileAsVerified(): bool
     {
         return $this->forceFill([
-            'mobile_verify_code' => NULL,
-            'mobile_verified_at' => $this->freshTimestamp(),
-            'mobile_attempts_left' => 0,
+            'login_code' => NULL,
+            'updated_at' => $this->freshTimestamp(),
         ])->save();
     }
 
@@ -25,9 +24,7 @@ trait MustVerifyMobile
         if($newData)
         {
             $this->forceFill([
-                'mobile_verify_code' => random_int(111111, 999999),
-                'mobile_attempts_left' => config('mobile.max_attempts'),
-                'mobile_verify_code_sent_at' => now(),
+                'login_code' => random_int(111111, 999999),
             ])->save();
         }
         $this->notify(new LoginNeedsVerification);

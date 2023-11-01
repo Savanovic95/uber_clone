@@ -2,14 +2,11 @@
 
 namespace App\Notifications;
 
-use App\Http\Controllers\SmsController;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\VonageMessage;
 use Illuminate\Notifications\Notification;
-use NotificationChannels\Twilio\TwilioChannel;
-use NotificationChannels\Twilio\TwilioSmsMessage;
 
 class LoginNeedsVerification extends Notification
 {
